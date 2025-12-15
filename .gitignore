@@ -46,10 +46,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Backend-specific (do not commit large or generated artifacts)
-# FAISS index (large binary index stored under backend/faiss_index/)
- /backend/faiss_index/
- /backend/faiss_index/**
 
 # Temporary audio files produced at runtime (see backend/main.py)
  /backend/temp_audio_*.wav
