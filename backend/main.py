@@ -57,6 +57,7 @@ async def lifespan(app: FastAPI):
     global vector_store, rag_chain
     
     print("🚀 Starting ML RAG System...")
+    print(f"📁 FAISS Index Path: {config.faiss_index_path}")
     
     # Load configuration
     if not config.groq_api_key:
@@ -64,27 +65,38 @@ async def lifespan(app: FastAPI):
     else:
         print("✅ Groq API key configured")
     
-    # Initialize vector store
-    vector_store = VectorStoreManager(
-        embedding_model=config.embedding_model,
-        index_path=config.faiss_index_path
-    )
+    # Initialize vector store and RAG chain in background to not block startup
+    import asyncio
     
-    # Load existing index
-    if vector_store.load_index():
-        print(f"📊 Loaded {vector_store.get_document_count()} documents from index")
-        
-        # Initialize RAG chain
-        if config.groq_api_key:
-            retriever = vector_store.get_retriever({"k": config.top_k_results})
-            rag_chain = RAGChain(
-                llm_model=config.llm_model,
-                retriever=retriever,
-                groq_api_key=config.groq_api_key
+    async def init_rag():
+        global vector_store, rag_chain
+        try:
+            # Initialize vector store
+            vector_store = VectorStoreManager(
+                embedding_model=config.embedding_model,
+                index_path=config.faiss_index_path
             )
-            print("✅ RAG chain initialized!")
-    else:
-        print("⚠️ No existing index found. Upload documents to build the knowledge base.")
+            
+            # Load existing index
+            if vector_store.load_index():
+                print(f"📊 Loaded {vector_store.get_document_count()} documents from index")
+                
+                # Initialize RAG chain
+                if config.groq_api_key:
+                    retriever = vector_store.get_retriever({"k": config.top_k_results})
+                    rag_chain = RAGChain(
+                        llm_model=config.llm_model,
+                        retriever=retriever,
+                        groq_api_key=config.groq_api_key
+                    )
+                    print("✅ RAG chain initialized!")
+            else:
+                print("⚠️ No existing index found. Upload documents to build the knowledge base.")
+        except Exception as e:
+            print(f"❌ Error initializing RAG: {e}")
+    
+    # Start initialization in background
+    asyncio.create_task(init_rag())
     
     yield
     
