@@ -25,10 +25,14 @@ if __name__ == "__main__":
     print("=" * 60)
 
     
+    # Use reload only in development
+    import os
+    is_production = os.getenv("RENDER", False) or os.getenv("PRODUCTION", False)
+    
     uvicorn.run(
         "main:app",
         host=config.api_host,
         port=config.api_port,
-        reload=True,
+        reload=not is_production,
         log_level="info"
     )

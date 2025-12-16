@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ml-study-buddy-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: HUGGINGFACE_API_KEY
+        sync: false
+      - key: FAISS_INDEX_PATH
+        value: ./faiss_index
+      - key: LLM_MODEL
+        value: llama-3.3-70b-versatile
+      - key: EMBEDDING_MODEL
+        value: sentence-transformers/all-MiniLM-L6-v2
+      - key: TOP_K_RESULTS
+        value: "5"
+      - key: PRODUCTION
+        value: "true"
+      - key: ALLOWED_ORIGINS
+        sync: false
+    healthCheckPath: /health
