@@ -27,7 +27,7 @@ if __name__ == "__main__":
     
     # Use reload only in development
     import os
-    is_production = os.getenv("RENDER", False) or os.getenv("PRODUCTION", False)
+    is_production = os.getenv("PRODUCTION", False)
     
     uvicorn.run(
         "main:app",

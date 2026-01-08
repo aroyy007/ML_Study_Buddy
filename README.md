@@ -13,7 +13,7 @@ ML Study Buddy is a full-stack application that combines a **Next.js frontend** 
 - 🎯 **Fine-Tuned Embeddings**: Custom embedding models optimized for ML domain
 - 📊 **Performance Evaluation**: Comprehensive metrics (Recall@K, MRR, NDCG)
 - 🌐 **Modern Web Interface**: Responsive React UI with real-time chat
-- 🚀 **Production Ready**: Deployed on Render with Vercel frontend
+- 🚀 **Production Ready**: Frontend deployed on Vercel
 
 ## 🏗️ Architecture
 
@@ -73,7 +73,7 @@ Documents → Synthetic Queries → Training Pairs → Contrastive Learning → 
 - **Embeddings**: sentence-transformers/all-MiniLM-L6-v2
 - **OCR**: TrOCR (microsoft/trocr-base-printed)
 - **Voice**: Whisper (openai/whisper-small), SpeechT5
-- **Deployment**: Render
+- **Deployment**: Local or cloud hosting
 
 ### AI Models Used
 
@@ -121,8 +121,7 @@ ml-study-buddy/
 │   ├── 📁 ocr/
 │   │   └── processor.py            # Image OCR
 │   ├── 📁 faiss_index/             # Vector database
-│   ├── requirements.txt            # Python dependencies
-│   └── render.yaml                 # Deployment config
+│   └── requirements.txt            # Python dependencies
 │
 └── 📁 notebook/
     ├── ML_RAG_System_v1_0.ipynb    # Complete RAG system
@@ -289,25 +288,39 @@ curl -X POST "http://localhost:8000/voice-query" \
 
 ## 🌐 Deployment
 
-### Backend (Render)
-```yaml
-# render.yaml
-services:
-  - type: web
-    name: ml-study-buddy-api
-    runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: GROQ_API_KEY
-        sync: false
+### Backend (Hugging Face Spaces)
+
+1. **Create Space** at [huggingface.co/spaces](https://huggingface.co/spaces)
+   - Choose **Docker** SDK
+   - Hardware: CPU Basic (free) or GPU for faster inference
+
+2. **Upload Files**:
+   ```
+   app.py                 # FastAPI entry point
+   Dockerfile             # Docker configuration
+   requirements-hf.txt    # Python dependencies
+   README-HF.md → README.md  # Rename for HF Space
+   backend/               # Backend modules
+   faiss_index/           # Pre-built vector index
+   ```
+
+3. **Set Secrets** (Settings → Repository secrets):
+   - `GROQ_API_KEY` - Your Groq API key
+
+4. **Your API URL**: `https://YOUR-USERNAME-your-space-name.hf.space`
+
+### Backend (Local Development)
+```bash
+cd backend
+pip install -r requirements.txt
+python run.py
 ```
 
 ### Frontend (Vercel)
 ```bash
 # Deploy to Vercel
 vercel --prod
-# Set environment variable
+# Set environment variable to your HF Space URL
 vercel env add NEXT_PUBLIC_API_URL
 ```
 
