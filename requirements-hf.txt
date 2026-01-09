@@ -37,3 +37,6 @@ python-dotenv>=1.0.0
 # Audio Processing (for Whisper)
 librosa>=0.10.0
 soundfile>=0.12.0
+
+# Utils
+huggingface_hub>=0.20.0
