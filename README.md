@@ -1,4 +1,4 @@
-# 🤖 ML Study Buddy - AI-Powered Machine Learning Assistant
+# ML Study Buddy - AI-Powered Machine Learning Assistant
 
 A comprehensive Retrieval-Augmented Generation (RAG) system designed to help students master machine learning concepts through intelligent document retrieval, voice interaction, and fine-tuned embeddings.
 
@@ -188,7 +188,7 @@ graph TD
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/yourusername/ml-study-buddy.git
+git clone https://github.com/aroyy007/ml-study-buddy.git
 cd ml-study-buddy
 ```
 
@@ -299,7 +299,7 @@ curl -X POST "http://localhost:8000/voice-query" \
    app.py                 # FastAPI entry point
    Dockerfile             # Docker configuration
    requirements-hf.txt    # Python dependencies
-   README-HF.md → README.md  # Rename for HF Space
+   README.md              # Readme for HF Space
    backend/               # Backend modules
    faiss_index/           # Pre-built vector index
    ```
@@ -365,13 +365,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **FAISS** for efficient vector search
 - **Next.js** and **FastAPI** for modern web development
 
-## 📞 Support
-
-- 📧 Email: support@mlstudybuddy.com
-- 💬 Discord: [Join our community](https://discord.gg/mlstudybuddy)
-- 📖 Docs: [Documentation](https://docs.mlstudybuddy.com)
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/ml-study-buddy/issues)
 
 ---
-
-**Built with ❤️ for the ML community**
