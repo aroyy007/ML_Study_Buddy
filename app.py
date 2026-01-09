@@ -1,7 +1,4 @@
-"""
-ML Study Buddy - Hugging Face Spaces FastAPI Backend
-This creates a REST API that your Next.js frontend can call.
-"""
+
 import os
 import sys
 from pathlib import Path
@@ -59,6 +56,62 @@ class UploadResponse(BaseModel):
     chunks_added: int
 
 
+# --- Download FAISS Index from HF Repo ---
+
+def download_faiss_index():
+    """Download FAISS index files from Hugging Face repo if they're LFS pointers."""
+    from pathlib import Path
+    import os
+    
+    faiss_dir = Path("./faiss_index")
+    index_file = faiss_dir / "index.faiss"
+    pkl_file = faiss_dir / "index.pkl"
+    
+    # Check if index.faiss exists and is a valid file (not LFS pointer)
+    if index_file.exists():
+        # Check file size - LFS pointers are small (~130 bytes)
+        if index_file.stat().st_size > 1000:
+            print("✅ FAISS index already downloaded")
+            return True
+        else:
+            print("📥 Detected LFS pointers, downloading actual files...")
+    else:
+        print("📥 FAISS index not found, attempting download...")
+    
+    try:
+        from huggingface_hub import hf_hub_download, HfApi
+        
+        # Get the repo ID from the environment or use default
+        repo_id = os.getenv("SPACE_ID", "ar-ray007/ml_study_buddy")
+        
+        print(f"📥 Downloading from {repo_id}...")
+        
+        # Ensure directory exists
+        faiss_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Download files
+        for filename in ["faiss_index/index.faiss", "faiss_index/index.pkl"]:
+            try:
+                downloaded_path = hf_hub_download(
+                    repo_id=repo_id,
+                    filename=filename,
+                    repo_type="space",
+                    local_dir=".",
+                    local_dir_use_symlinks=False
+                )
+                print(f"✅ Downloaded {filename}")
+            except Exception as e:
+                print(f"⚠️ Could not download {filename}: {e}")
+        
+        return index_file.exists() and index_file.stat().st_size > 1000
+    except ImportError:
+        print("⚠️ huggingface_hub not installed, cannot download LFS files")
+        return False
+    except Exception as e:
+        print(f"❌ Error downloading FAISS index: {e}")
+        return False
+
+
 # --- Startup/Shutdown ---
 
 @asynccontextmanager
@@ -77,6 +130,9 @@ async def lifespan(app: FastAPI):
     else:
         print("✅ Groq API key configured")
     
+    # Download FAISS index if needed (handle LFS)
+    download_faiss_index()
+    
     # Initialize vector store (lazy load embeddings)
     vector_store = VectorStoreManager(
         embedding_model=config.embedding_model,
@@ -85,10 +141,10 @@ async def lifespan(app: FastAPI):
     
     # Check if index exists
     index_file = Path(config.faiss_index_path) / "index.faiss"
-    if index_file.exists():
-        print(f"📊 Index file found, will load on first query")
+    if index_file.exists() and index_file.stat().st_size > 1000:
+        print(f"📊 Index file found ({index_file.stat().st_size / 1024 / 1024:.1f} MB), will load on first query")
     else:
-        print("⚠️ No existing index found. Upload documents to build knowledge base.")
+        print("⚠️ No valid index found. Upload documents to build knowledge base.")
     
     print("✅ Backend ready!")
     
