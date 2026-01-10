@@ -95,7 +95,7 @@ export default function Hero() {
                     </div>
 
                     {/* Rating */}
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                         <div className="flex">
                             {[...Array(5)].map((_, i) => (
                                 <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
@@ -104,7 +104,7 @@ export default function Hero() {
                         <span className="text-sm text-muted-foreground">
                             Trusted by <span className="font-semibold text-foreground">27,000+</span> learners
                         </span>
-                    </div>
+                    </div> */}
                 </motion.div>
 
                 {/* CTA Buttons */}
