@@ -75,7 +75,7 @@ export default function Hero() {
                     className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8"
                 >
                     {/* Avatars Stack */}
-                    <div className="flex items-center">
+                    {/* <div className="flex items-center">
                         <div className="flex -space-x-3">
                             {avatars.map((avatar) => (
                                 <div
@@ -92,7 +92,7 @@ export default function Hero() {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Rating */}
                     {/* <div className="flex items-center gap-2">
