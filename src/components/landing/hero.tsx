@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronDown, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Cover } from "@/components/ui/cover";
+import BackgroundRippleEffect from "@/components/BackgroundRippleEffect";
 
 const avatars = [
     { id: 1, rotation: -6 },
@@ -18,6 +19,7 @@ const avatars = [
 export default function Hero() {
     return (
         <section className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 pt-24 pb-12 overflow-hidden">
+            <BackgroundRippleEffect />
             {/* Background gradient */}
             <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted/20 pointer-events-none" />
 
