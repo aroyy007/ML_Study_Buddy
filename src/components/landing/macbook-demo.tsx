@@ -3,6 +3,7 @@
 import React from "react";
 import { MacbookScroll } from "@/components/ui/macbook-scroll";
 import { Brain } from "lucide-react";
+import BackgroundRippleEffect from "@/components/BackgroundRippleEffect";
 
 // ML Buddy Badge Component
 const MLBuddyBadge = ({ className }: { className?: string }) => {
@@ -19,6 +20,7 @@ const MLBuddyBadge = ({ className }: { className?: string }) => {
 export default function MacbookDemo() {
     return (
         <section id="demo" className="w-full overflow-hidden bg-white dark:bg-[#0B0B0F]">
+            <BackgroundRippleEffect />
             <MacbookScroll
                 title={
                     <span>
