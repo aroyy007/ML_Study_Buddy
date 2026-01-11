@@ -128,11 +128,7 @@ export default function ChatInterface({
                     <MessageBubble
                       key={message.id}
                       message={message}
-                      showEncryptedReveal={
-                        message.role === "assistant" &&
-                        index === messages.length - 1 &&
-                        !message.isStreaming
-                      }
+                      showEncryptedReveal={false}
                       onRegenerate={
                         message.role === "assistant"
                           ? () => {
